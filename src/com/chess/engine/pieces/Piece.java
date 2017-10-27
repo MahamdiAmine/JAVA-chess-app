@@ -12,14 +12,21 @@ import java.util.Collection;
 public abstract class Piece {
     protected final int piecePosition;
     protected final Alliance pieceAlliance;
+    protected final boolean isFirstMove;
 
     public Piece(final int piecePosition, final Alliance pieceAlliance) {
         this.piecePosition = piecePosition;
         this.pieceAlliance = pieceAlliance;
+        //TODO  a lot of work to do !!!
+        this.isFirstMove=false;
     }
     public abstract Collection<Move> calculateLegalMoves(final Board board) ;
 
     public Alliance getPieceAlliance() {
         return this.pieceAlliance;
+    }
+
+    public boolean isFirstMove() {
+        return isFirstMove;
     }
 }
