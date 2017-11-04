@@ -17,7 +17,7 @@ import java.util.List;
  * Created By Mahamdi Amine on 10/27/17
  */
 public class Queen extends Piece {
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {9, 7, -7, -9,8, -8, 1, -1};
+    private final static int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {9, 7, -7, -9, 8, -8, 1, -1};
 
 
     public Queen(int piecePosition, Alliance pieceAlliance) {
@@ -30,8 +30,8 @@ public class Queen extends Piece {
         for (final int currentCandidateOffset : CANDIDATE_MOVE_VECTOR_COORDINATES) {
             int candidateDestinationCoordinate = this.piecePosition;
             while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-                if (isFirstColumnExclusion(currentCandidateOffset, candidateDestinationCoordinate) ||
-                        isEighthColumnExclusion(currentCandidateOffset, candidateDestinationCoordinate)) {
+                if (isFirstColumnExclusion(candidateDestinationCoordinate, currentCandidateOffset) ||
+                        isEighthColumnExclusion(candidateDestinationCoordinate, currentCandidateOffset)) {
                     break;
                 }
                 candidateDestinationCoordinate += currentCandidateOffset;
@@ -59,10 +59,15 @@ public class Queen extends Piece {
     }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {
-        return BoardUtils.FIRST_COLUMN[currentPosition] && ((candidateOffset == 7) || (candidateOffset == -9)||(candidateOffset == -1));
+        return BoardUtils.FIRST_COLUMN[currentPosition] && ((candidateOffset == 7) || (candidateOffset == -9) || (candidateOffset == -1));
     }
 
     private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset) {
-        return BoardUtils.EIGHTH_COLUMN[currentPosition] && ((candidateOffset == -7) || (candidateOffset == 9)||(candidateOffset == 1));
+        return BoardUtils.EIGHTH_COLUMN[currentPosition] && ((candidateOffset == -7) || (candidateOffset == 9) || (candidateOffset == 1));
+    }
+
+    @Override
+    public String toString() {
+        return pieceType.QUEEN.toString();
     }
 }

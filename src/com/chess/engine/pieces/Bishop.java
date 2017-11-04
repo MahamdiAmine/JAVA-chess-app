@@ -20,7 +20,7 @@ public class Bishop extends Piece {
 
     private final static int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {9, 7, -7, -9};
 
-    public Bishop(final int piecePosition,final Alliance pieceAlliance) {
+    public Bishop(final int piecePosition, final Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -30,8 +30,8 @@ public class Bishop extends Piece {
         for (final int currentCandidateOffset : CANDIDATE_MOVE_VECTOR_COORDINATES) {
             int candidateDestinationCoordinate = this.piecePosition;
             while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-                if (isFirstColumnExclusion(currentCandidateOffset, candidateDestinationCoordinate) ||
-                        isEighthColumnExclusion(currentCandidateOffset, candidateDestinationCoordinate)) {
+                if (isFirstColumnExclusion( candidateDestinationCoordinate,currentCandidateOffset) ||
+                        isEighthColumnExclusion(candidateDestinationCoordinate,currentCandidateOffset)) {
                     break;
                 }
                 candidateDestinationCoordinate += currentCandidateOffset;
@@ -66,5 +66,9 @@ public class Bishop extends Piece {
         return BoardUtils.EIGHTH_COLUMN[currentPosition] && ((candidateOffset == -7) || (candidateOffset == 9));
     }
 
+    @Override
+    public String toString() {
+        return pieceType.BISHOP.toString();
+    }
 }
 

@@ -1,5 +1,6 @@
 package com.chess.engine.board;
 
+import com.chess.engine.Alliance;
 import com.chess.engine.pieces.Piece;
 import com.google.common.collect.ImmutableMap;
 
@@ -49,13 +50,18 @@ public abstract class Tile {
         public Piece getPiece() {
             return null;
         }
+
+        @Override
+        public String toString() {
+            return "-";
+        }
     }
 
     public static final class OccupiedTile extends Tile {
 
         private final Piece pieceOnTile;
 
-        private OccupiedTile(Piece pieceOnTile,final int tileCoordinate) {
+        private OccupiedTile(Piece pieceOnTile, final int tileCoordinate) {
             super(tileCoordinate);
             this.pieceOnTile = pieceOnTile;
         }
@@ -69,7 +75,15 @@ public abstract class Tile {
         public Piece getPiece() {
             return this.pieceOnTile;
         }
+
+        @Override
+        public String toString() {
+            final Alliance pieceAlliance = getPiece().getPieceAlliance();
+            System.out.println(pieceAlliance);
+            return pieceAlliance.isBlack() ? getPiece().toString().toLowerCase() : getPiece().toString();
+        }
     }
+
 
 }
 

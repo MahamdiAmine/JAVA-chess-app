@@ -72,4 +72,9 @@ public class Pawn extends Piece {
     public Alliance getPieceAlliance() {
         return super.getPieceAlliance();
     }
+
+    @Override
+    public String toString() {
+        return pieceType.PAWN.toString();
+    }
 }
