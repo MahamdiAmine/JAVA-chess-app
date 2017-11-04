@@ -79,7 +79,6 @@ public abstract class Tile {
         @Override
         public String toString() {
             final Alliance pieceAlliance = getPiece().getPieceAlliance();
-            System.out.println(pieceAlliance);
             return pieceAlliance.isBlack() ? getPiece().toString().toLowerCase() : getPiece().toString();
         }
     }
