@@ -1,5 +1,9 @@
 package com.chess.engine;
 
+import com.chess.engine.player.BlackPlayer;
+import com.chess.engine.player.Player;
+import com.chess.engine.player.WhitePlayer;
+
 /**
  * Created By Mahamdi Amine on 10/27/17
  */
@@ -19,6 +23,11 @@ public enum Alliance {
         public boolean isWhite() {
             return true;
         }
+
+        @Override
+        public Player choosePlayer(final BlackPlayer blackPlayer, final WhitePlayer whitePlayer) {
+            return whitePlayer;
+        }
     },
     BLACK {
         @Override
@@ -35,6 +44,11 @@ public enum Alliance {
         public boolean isWhite() {
             return false;
         }
+
+        @Override
+        public Player choosePlayer(final BlackPlayer blackPlayer, final WhitePlayer whitePlayer) {
+            return blackPlayer;
+        }
     };
 
 
@@ -43,5 +57,7 @@ public enum Alliance {
     public abstract boolean isBlack();
 
     public abstract boolean isWhite();
+
+    public abstract Player choosePlayer(BlackPlayer blackPlayer, WhitePlayer whitePlayer);
 }
 
