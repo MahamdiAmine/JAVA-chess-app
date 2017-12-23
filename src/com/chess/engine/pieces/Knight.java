@@ -20,7 +20,7 @@ public class Knight extends Piece {
     private final static int[] CANDIDATE_MOVE_COORDINATES = {-17, -15, -10, -6, 6, 10, 15, 17};
 
     public Knight(final int piecePosition, final Alliance pieceAlliance) {
-        super(piecePosition, pieceAlliance);
+        super(piecePosition, pieceAlliance, PieceType.KNIGHT);
     }
 
     @Override
@@ -71,5 +71,10 @@ public class Knight extends Piece {
     @Override
     public String toString() {
         return pieceType.KNIGHT.toString();
+    }
+
+    @Override
+    public Knight movePiece(final Move move) {
+        return new Knight(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance());
     }
 }

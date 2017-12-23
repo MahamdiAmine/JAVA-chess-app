@@ -22,7 +22,7 @@ public class King extends Piece {
     private final static int[] CANDIDATE_MOVE_COORDINATES = {8, -8, -9, 9, -7, 7, -1, 1};
 
     public King(final int piecePosition, final Alliance pieceAlliance) {
-        super(piecePosition, pieceAlliance);
+        super(piecePosition, pieceAlliance, PieceType.KING);
     }
 
     @Override
@@ -70,5 +70,10 @@ public class King extends Piece {
     @Override
     public String toString() {
         return pieceType.KING.toString();
+    }
+
+    @Override
+    public King movePiece(final Move move) {
+        return new King(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance());
     }
 }

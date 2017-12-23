@@ -11,7 +11,6 @@ import java.util.Map;
  * Created By Mahamdi Amine on 10/26/17
  */
 public abstract class Tile {
-
     protected final int tileCoordinate;
     private static final Map<Integer, EmptyTile> EMPTY_TILE_CACHE = createAllPossibleEmptyTiles();
 
@@ -83,6 +82,8 @@ public abstract class Tile {
         }
     }
 
-
+    public int getTileCoordinate() {
+        return this.tileCoordinate;
+    }
 }
 
