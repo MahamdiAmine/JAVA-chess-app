@@ -39,7 +39,6 @@ public class BoardUtils {
 
     public static boolean isValidTileCoordinate(final int coordinate) {
         return coordinate >= 0 && coordinate < NUM_TILES;
-
     }
 
     private Map<String, Integer> initializePositionToCoordinateMap() {

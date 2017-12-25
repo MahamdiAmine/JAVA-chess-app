@@ -51,6 +51,7 @@ public class Board {
         return this.enPassantPawn;
     }
 
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
