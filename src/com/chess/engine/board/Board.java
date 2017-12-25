@@ -7,6 +7,7 @@ import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+
 import java.util.*;
 
 /**
@@ -19,16 +20,19 @@ public class Board {
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
+    private final Pawn enPassantPawn;
 
     private Board(final Builder builder) {
         this.gameboard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameboard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameboard, Alliance.BLACK);
+        this.enPassantPawn = builder.EnPassantPawn;
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.blackPlayer, this.whitePlayer);
+
     }
 
     private Collection<Move> calculateLegalMoves(final Collection<Piece> pieces) {
@@ -41,6 +45,10 @@ public class Board {
 
     public Player getCurrentPlayer() {
         return this.currentPlayer;
+    }
+
+    public Pawn getEnPassantPawn() {
+        return this.enPassantPawn;
     }
 
     @Override
@@ -146,7 +154,7 @@ public class Board {
     }
 
     public Iterable<Move> getAllLegalMoves() {
-        return Iterables.unmodifiableIterable(Iterables.concat(this.blackPlayer.getLegalMoves(),this.whitePlayer.getLegalMoves()));
+        return Iterables.unmodifiableIterable(Iterables.concat(this.blackPlayer.getLegalMoves(), this.whitePlayer.getLegalMoves()));
     }
 
     public static class Builder {

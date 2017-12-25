@@ -26,8 +26,8 @@ public class TakenPiecesPanel extends JPanel {
     private final JPanel northPanel;
     private final JPanel southPanel;
 
-    private final String imagePath = "";
-    private final String imageExtension = ".gif";
+    private final String imagePath = "/Scripts/chess-Is-My-Life/Images/pieces/";
+    private final String imageExtension = ".png";
 
     public TakenPiecesPanel() {
         super(new BorderLayout());

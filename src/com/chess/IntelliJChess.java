@@ -6,7 +6,7 @@ import com.chess.gui.Table;
 /**
  * Created By Mahamdi Amine on 11/2/17
  */
-public class Jchess {
+public class IntelliJChess {
     public static void main(String[] args) {
 
         Board board=Board.createStandardBoard();
