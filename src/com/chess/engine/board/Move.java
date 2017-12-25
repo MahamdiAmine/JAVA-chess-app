@@ -10,15 +10,24 @@ import com.chess.engine.pieces.Rook;
  * Created By Mahamdi Amine on 10/27/17
  */
 public abstract class Move {
-    final Board board;
-    final Piece movedPiece;
-    final int destinationCoordinate;
+    protected final Board board;
+    protected final Piece movedPiece;
+    protected final int destinationCoordinate;
+    protected final boolean isFirstMove;
     public static final Move NULL_MOVE = new NullMove();
 
     private Move(Board board, Piece movedPiece, int destinationCoordinate) {
         this.board = board;
         this.movedPiece = movedPiece;
         this.destinationCoordinate = destinationCoordinate;
+        this.isFirstMove = movedPiece.isFirstMove();
+    }
+
+    private Move(Board board, int destinationCoordinate) {
+        this.board = board;
+        this.movedPiece = null;
+        this.destinationCoordinate = destinationCoordinate;
+        this.isFirstMove = false;
     }
 
     @Override
@@ -27,6 +36,7 @@ public abstract class Move {
         int result = 1;
         result = prime * result + this.destinationCoordinate;
         result = prime * result + this.movedPiece.hashCode();
+        result = prime * result + this.movedPiece.getPiecePosition();
         return result;
 
     }
@@ -37,6 +47,7 @@ public abstract class Move {
         if (!(other instanceof Move)) return false;
         final Move otherMove = (Move) other;
         return (getDestinationCoordinate() == otherMove.getDestinationCoordinate() &&
+                getCurrentCoordinate() == otherMove.getCurrentCoordinate() &&
                 getMovedPiece() == otherMove.getMovedPiece());
 
 
@@ -64,7 +75,6 @@ public abstract class Move {
 
 
     public Board execute() {
-        //TODO hashcode and equals===
         final Builder builder = new Builder();
         for (final Piece piece : this.board.getCurrentPlayer().getActivePieces())
             if (!this.movedPiece.equals(piece)) builder.setPiece(piece);
@@ -89,6 +99,16 @@ public abstract class Move {
             super(board, movedPiece, destinationCoordinate);
         }
 
+        @Override
+        public boolean equals(Object other) {
+            return this == other || other instanceof MajorMove && super.equals(other);
+        }
+
+        @Override
+        public String toString() {
+            //return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
+           return "";
+        }
     }
 
     public static class AttackMove extends Move {
@@ -126,7 +146,7 @@ public abstract class Move {
     }
 
     public static final class PawnMove extends Move {
-        public PawnMove(final Board board, final Piece movedPiece, final int destinationCoordinate, final Piece attackedPiece) {
+        public PawnMove(final Board board, final Piece movedPiece, final int destinationCoordinate) {
             super(board, movedPiece, destinationCoordinate);
 
         }
@@ -148,7 +168,7 @@ public abstract class Move {
     }
 
     public static final class PawnJump extends Move {
-        public PawnJump(final Board board, final Piece movedPiece, final int destinationCoordinate, final Piece attackedPiece) {
+        public PawnJump(final Board board, final Piece movedPiece, final int destinationCoordinate) {
             super(board, movedPiece, destinationCoordinate);
 
         }
@@ -167,6 +187,11 @@ public abstract class Move {
             builder.setEnPassantPawn(movedPawn);
             builder.setMoveMaker(this.board.getCurrentPlayer().getOpponent().getAlliance());
             return builder.build();
+        }
+
+        @Override
+        public String toString() {
+            return BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
         }
     }
 
@@ -214,7 +239,7 @@ public abstract class Move {
         }
     }
 
-    public static  class KingSideCastleMove extends CastleMove {
+    public static class KingSideCastleMove extends CastleMove {
 
         public KingSideCastleMove(final Board board,
                                   final Piece movedPiece,
@@ -251,7 +276,7 @@ public abstract class Move {
     public static final class NullMove extends Move {
 
         public NullMove() {
-            super(null, null, -1);
+            super(null, -1);
         }
 
         @Override

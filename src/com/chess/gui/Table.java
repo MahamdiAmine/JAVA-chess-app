@@ -19,6 +19,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static javax.swing.SwingUtilities.*;
@@ -27,16 +29,21 @@ import static javax.swing.SwingUtilities.*;
  * Created By Mahamdi Amine on 12/23/17
  */
 public class Table {
-    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
+    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(700, 600);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private final Color LIGHT_TILT_COLOR = Color.decode("#FFFFFF");
     private final Color DARK_TILE_COLOR = Color.decode("#1D3D63");
     private final JFrame gameFrame;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
+    private final MoveLog moveLog;
     private Board chessboard;
     private BoardDirection boardDirection;
-    private static String pieceImagesPath = "/Scripts/chess-Is-My-Life/Images/";
+    private boolean highlightLegalMoves;
+    private static String pieceImagesPath = "/Scripts/chess-Is-My-Life/Images/pieces/";
+    private static String bimPath = "/Scripts/chess-Is-My-Life/Images/others/bim.png";
     private static String pieceImagesExtension = ".png";
     private Tile sourceTile;
     private Tile destinationTile;
@@ -44,15 +51,21 @@ public class Table {
 
     public Table() {
         this.chessboard = Board.createStandardBoard();
-        this.boardDirection=BoardDirection.NORMAL;
+        this.moveLog = new MoveLog();
+        this.boardDirection = BoardDirection.NORMAL;
+        this.highlightLegalMoves = false;
         this.gameFrame = new JFrame("Chess is my life ");
         this.boardPanel = new BoardPanel();
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setLayout(new BorderLayout());
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
     }
 
     private JMenuBar createTableMenuBar() {
@@ -119,6 +132,7 @@ public class Table {
             this.tileId = tileId;
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
+            assignTilePieceIcon(chessboard);
             addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(final MouseEvent mouseEvent) {
@@ -140,7 +154,7 @@ public class Table {
                             final MoveTransition transition = chessboard.getCurrentPlayer().makeMove(move);
                             if (transition.getMoveStatus().isDone()) {
                                 chessboard = transition.getTransitionBoard();
-                                //TODO add the move to the move log..
+                                moveLog.addMove(move);
                             }
                             sourceTile = null;
                             destinationTile = null;
@@ -149,6 +163,8 @@ public class Table {
                         invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(chessboard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                                 boardPanel.drawBoard(chessboard);
                             }
                         });
@@ -175,9 +191,6 @@ public class Table {
 
                 }
             });
-
-            assignTilePieceIcon(chessboard);
-
             validate();
         }
 
@@ -210,9 +223,57 @@ public class Table {
         public void drawTile(final Board board) {
             assignTileColor();
             assignTilePieceIcon(board);
+            highlightLegals(chessboard);
             validate();
             repaint();
         }
+
+        private void highlightLegals(final Board board) {
+            if (highlightLegalMoves) {
+                for (final Move move : pieceLegalMoves(board)) {
+                    if (move.getDestinationCoordinate() == this.tileId) {
+                        try {
+                            add(new JLabel(new ImageIcon(ImageIO.read(new File(bimPath)))));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+        }
+
+        private Collection<Move> pieceLegalMoves(final Board board) {
+            if (humanMovedPiece != null && humanMovedPiece.getPieceAlliance() == board.getCurrentPlayer().getAlliance()) {
+                return humanMovedPiece.calculateLegalMoves(board);
+            }
+            return Collections.emptyList();
+        }
+    }
+
+    protected class MoveLog {
+        private final List<Move> moves;
+
+        MoveLog() {
+            this.moves = new ArrayList<>();
+        }
+
+        public List<Move> getMoves() {
+            return moves;
+        }
+
+        public void addMove(final Move move) {
+            this.moves.add(move);
+        }
+
+        public boolean removeMove(final Move move) {
+            return this.moves.remove(move);
+        }
+
+        public Move removeMove(final int index) {
+            return this.moves.remove(index);
+        }
+
     }
 
     public enum BoardDirection {
@@ -255,6 +316,15 @@ public class Table {
             }
         });
         preferencesMenu.add(flipBoardMenuItem);
+        preferencesMenu.addSeparator();
+        final JCheckBoxMenuItem legalMoveHighlighterCheckBox = new JCheckBoxMenuItem("Highlight Legal Moves", false);
+        legalMoveHighlighterCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                highlightLegalMoves = legalMoveHighlighterCheckBox.isSelected();
+            }
+        });
+        preferencesMenu.add(legalMoveHighlighterCheckBox);
         return preferencesMenu;
     }
 
