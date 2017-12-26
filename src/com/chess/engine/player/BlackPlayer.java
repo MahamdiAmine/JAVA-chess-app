@@ -64,12 +64,17 @@ public class BlackPlayer extends Player {
                 final Tile rookTile = this.board.getTile(0);
                 if (rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove() &&
                         Player.calculateAttacksOnTile(2, opponentLegals).isEmpty() &&
-                        Player.calculateAttacksOnTile(3, opponentLegals).isEmpty()&&
-                        rookTile.getPiece()instanceof Rook) {
+                        Player.calculateAttacksOnTile(3, opponentLegals).isEmpty() &&
+                        rookTile.getPiece() instanceof Rook) {
                     kingCastles.add(new QueenSideCastleMove(this.board, this.playerKing, 2, (Rook) rookTile.getPiece(), rookTile.getTileCoordinate(), 3));
                 }
             }
         }
         return ImmutableList.copyOf(kingCastles);
+    }
+
+    @Override
+    public String toString() {
+        return "Black";
     }
 }
