@@ -10,26 +10,29 @@ import com.chess.engine.player.MoveTransition;
 public class MinMax implements MoveStrategy {
 
     private final BoardEvaluator boardEvaluator;
+    private final int searchDepth;
 
-    public MinMax() {
+    public MinMax(final int searchDepth) {
+
         this.boardEvaluator = new StandardBoardEvaluator();
+        this.searchDepth=searchDepth;
     }
 
     @Override
-    public Move execute(Board board, int depth) {
+    public Move execute(Board board) {
         final long startTime = System.currentTimeMillis();
         Move bestMove = null;
         int highestSeenValue = Integer.MIN_VALUE;
         int lowestSeenValue = Integer.MAX_VALUE;
         int currentValue;
-        System.out.println(board.getCurrentPlayer().toString() + "thinking with depth =" + depth);
-        int numMoves=board.getCurrentPlayer().getLegalMoves().size();
+        System.out.println(board.getCurrentPlayer().toString() + " thinking with depth =" + searchDepth);
+        int numMoves = board.getCurrentPlayer().getLegalMoves().size();
         for (final Move move : board.getCurrentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.getCurrentPlayer().makeMove(move);
             if (moveTransition.getMoveStatus().isDone()) {
                 currentValue = board.getCurrentPlayer().getAlliance().isWhite() ?
-                        min(moveTransition.getTransitionBoard(), depth - 1) :
-                        max(moveTransition.getTransitionBoard(), depth - 1);
+                        min(moveTransition.getTransitionBoard(), searchDepth - 1) :
+                        max(moveTransition.getTransitionBoard(), searchDepth- 1);
                 if (board.getCurrentPlayer().getAlliance().isWhite() && currentValue > highestSeenValue) {
                     highestSeenValue = currentValue;
                     bestMove = move;
@@ -44,7 +47,7 @@ public class MinMax implements MoveStrategy {
     }
 
     public int min(final Board board, final int depth) {
-        if (depth == 0/*||gameover*/) return boardEvaluator.evaluate(board, 0);
+        if (depth == 0 || isEndGameScenario(board)) return boardEvaluator.evaluate(board, 0);
         int lowestSeenValue = Integer.MAX_VALUE;
         for (final Move move : board.getCurrentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.getCurrentPlayer().makeMove(move);
@@ -56,8 +59,14 @@ public class MinMax implements MoveStrategy {
         return lowestSeenValue;
     }
 
+    private static boolean isEndGameScenario(final Board board) {
+
+        return board.getCurrentPlayer().isInCheck() ||
+                board.getCurrentPlayer().isInStaleMate();
+    }
+
     public int max(final Board board, final int depth) {
-        if (depth == 0/*||gameover*/) return boardEvaluator.evaluate(board, 0);
+        if (depth == 0 || isEndGameScenario(board)) return boardEvaluator.evaluate(board, 0);
         int highestSeenValue = Integer.MIN_VALUE;
         for (final Move move : board.getCurrentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.getCurrentPlayer().makeMove(move);
@@ -73,4 +82,6 @@ public class MinMax implements MoveStrategy {
     public String toString() {
         return "MinMax";
     }
+
+
 }

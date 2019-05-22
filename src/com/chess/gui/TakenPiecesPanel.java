@@ -22,7 +22,7 @@ import java.util.List;
 public class TakenPiecesPanel extends JPanel {
     private static final EtchedBorder PANEL_BORDER = new EtchedBorder(EtchedBorder.RAISED);
     private static final Color PANEL_COLOR = Color.decode("0xFDFE6");
-    private static final Dimension TAKEN_PIECES_DIMENSION = new Dimension(40, 80);
+    private static final Dimension TAKEN_PIECES_DIMENSION = new Dimension(60, 80);
     private final JPanel northPanel;
     private final JPanel southPanel;
 
@@ -75,7 +75,8 @@ public class TakenPiecesPanel extends JPanel {
             try {
                 final BufferedImage image = ImageIO.read(new File(fullPath));
                 final ImageIcon imageIcon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel();
+                final JLabel imageLabel = new JLabel(new ImageIcon(imageIcon.getImage().getScaledInstance(
+                        imageIcon.getIconWidth() - 15, imageIcon.getIconWidth() - 15, Image.SCALE_SMOOTH)));
                 this.southPanel.add(imageLabel);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -88,7 +89,8 @@ public class TakenPiecesPanel extends JPanel {
             try {
                 final BufferedImage image = ImageIO.read(new File(fullPath));
                 final ImageIcon imageIcon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel();
+                final JLabel imageLabel = new JLabel(new ImageIcon(imageIcon.getImage().getScaledInstance(
+                        imageIcon.getIconWidth() - 15, imageIcon.getIconWidth() - 15, Image.SCALE_SMOOTH)));
                 this.northPanel.add(imageLabel);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -93,7 +93,7 @@ public class BoardTest {
         builder.setMoveMaker(Alliance.WHITE);
     }
     @Test
-    public void testAlgebreicNotation() {
+    public void testAlgebraicNotation() {
         assertEquals(BoardUtils.getPositionAtCoordinate(0), "a8");
         assertEquals(BoardUtils.getPositionAtCoordinate(1), "b8");
         assertEquals(BoardUtils.getPositionAtCoordinate(2), "c8");
@@ -104,18 +104,5 @@ public class BoardTest {
         assertEquals(BoardUtils.getPositionAtCoordinate(7), "h8");
     }
 
-//    @Test
-//    public void tt() {
-//
-//        final Board.Builder builder = new Board.Builder();
-//        //BLACK LAYOUT
-//        builder.setPiece(new King(Alliance.BLACK, 4, false, false));
-//        //WHITE LAYOUT
-//        builder.setPiece(new King(Alliance.WHITE, 60, false, false));
-//        builder.setPiece(new Bishop(Alliance.WHITE, 61));
-//        //white to move
-//        builder.setMoveMaker(Alliance.WHITE);
-//        final Board board = builder.build();
-//        System.out.println(FenUtilities.createFENFromGame(board));
-//    }
+
 }
