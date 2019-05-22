@@ -2,7 +2,7 @@
 
 A Java Chess application .
 
-##Features
+## Features
 
 * play against human 
 * play against UI 
