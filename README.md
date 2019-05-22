@@ -15,7 +15,10 @@ A Java Chess application .
 * unit tests 
 * and more!
 
-##
+## Screenshot
+
+![alt text](Images/screenshot%20.png)
+
 
  
  
